@@ -1,0 +1,21 @@
+<div class="title">
+  <div class="title-a"> <img src="/assets/kwikemart.png"> </div>
+
+  <div class="title-d">
+    <div *ngFor="let r of lineItems">
+    <h3 >Item in cart</h3>
+    <h1 > <code>{{ r.quantity }}</code> </h1>
+    <p><code>{{r.name}}</code></p>
+  </div>
+</div>
+  <div class="title-b">
+    <!-- <button [disabled]="lineItems.length>0" type="button" (click)="checkout()" [routerLink]="['/']" >Checkout</button> -->
+    <button *ngIf="lineItems!=undefined" [disabled]="lineItems.length<=0" type="button" [routerLink]="['/']" (click)="checkout()" >Checkout</button>
+  </div>
+
+  <div class="title-c">
+    <button type="button" [routerLink]="['/']">Back</button>
+  </div>
+</div>
+
+<router-outlet />
