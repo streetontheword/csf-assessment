@@ -18,7 +18,7 @@ export class CartStore extends Dexie {
 
     constructor(){
         super('cartDB')
-        this.version(1).stores({
+        this.version(2).stores({
             "items": 'prodId'
         })
 

@@ -1,6 +1,5 @@
 package vttp.batch4.csf.ecommerce.controllers;
 
-
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,9 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-
-
-
 import jakarta.json.Json;
 import jakarta.json.JsonArray;
 
@@ -36,10 +32,9 @@ import vttp.batch4.csf.ecommerce.models.Order;
 
 import vttp.batch4.csf.ecommerce.services.PurchaseOrderService;
 
-
 @Controller
 @CrossOrigin
-@RequestMapping(path="/api", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
 public class OrderController {
 
   @Autowired
@@ -49,37 +44,37 @@ public class OrderController {
   // If this method is changed, any assessment task relying on this method will
   // not be marked
   @ResponseBody
-  @PostMapping(path="/postOrder")
+  @PostMapping(path = "/postOrder")
   public ResponseEntity<String> postOrder(@RequestBody String jsonObjString) {
-    
-     // TODO Task 3
-    JsonReader jsonReader = Json.createReader(new StringReader(jsonObjString));
-	
-		JsonObject jsonObject = jsonReader.readObject();
 
-    System.out.println("RECEIVED>>>>>"+jsonObject);
+    // TODO Task 3
+    JsonReader jsonReader = Json.createReader(new StringReader(jsonObjString));
+
+    JsonObject jsonObject = jsonReader.readObject();
+
+    System.out.println("RECEIVED>>>>>" + jsonObject);
 
     String name = jsonObject.getString("name");
     String address = jsonObject.getString("address");
     boolean priority = jsonObject.getBoolean("priority");
     String comments = jsonObject.getString("comments");
-    
-    System.out.println( name);
+
+    System.out.println(name);
     System.out.println(address);
     System.out.println(priority);
 
     System.out.println(comments);
     List<LineItem> listOfLineItem = new ArrayList<>();
 
-	 LineItem lineItem = new LineItem();
+    LineItem lineItem = new LineItem();
     JsonArray jsonArray = jsonObject.getJsonArray("cart");
-    for (JsonValue j : jsonArray){
+    for (JsonValue j : jsonArray) {
       System.out.println(j);
       JsonObject jsonobJ = j.asJsonObject();
       String prodId = jsonobJ.getString("prodId");
       String prodName = jsonobJ.getString("name");
       JsonNumber jsonPrice = jsonobJ.getJsonNumber("price");
-      float price = (float)jsonPrice.doubleValue();
+      float price = (float) jsonPrice.doubleValue();
       System.out.println(price);
       System.out.println(prodId);
       lineItem.setName(prodName);
@@ -88,12 +83,11 @@ public class OrderController {
       listOfLineItem.add(lineItem);
     }
 
-    Cart cart = new Cart(); 
+    Cart cart = new Cart();
     cart.setLineItems(listOfLineItem);
-   
 
-    Order order = new Order(); 
-   
+    Order order = new Order();
+
     order.setName(name);
     order.setAddress(address);
     order.setComments(comments);
@@ -102,20 +96,20 @@ public class OrderController {
     System.out.println("order>>>" + order);
 
     System.out.println(order.toString());
- 
-    	try {
-        poSvc.createNewPurchaseOrder(order);
-			return ResponseEntity.status(HttpStatusCode.valueOf(200)).body(order.getOrderId());
-
-		} catch (Exception e) {
-
-			return new ResponseEntity<>(HttpStatusCode.valueOf(500));
-		}
 
     
 
+    try {
+      System.out.println("try");
+      poSvc.createNewPurchaseOrder(order);
+      JsonObject jsonObj = Json.createObjectBuilder().add("success", order.getOrderId()).build();
+      return ResponseEntity.status(HttpStatusCode.valueOf(200)).body(jsonObj.toString());
+      
 
+    } catch (Exception e) {
+      System.out.println("catch");
+      return new ResponseEntity<>(HttpStatusCode.valueOf(500));
+    }
 
   }
 }
-

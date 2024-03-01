@@ -28,8 +28,8 @@ export class ProductService {
   // If this method is changed, any assessment task relying on this method will
   // not be marked
    // TODO Task 3
-  checkout(order: Order): Promise<Order>{
-    return lastValueFrom(this.http.post<Order>('/api/postOrder', order))
+  checkout(order: Order): Promise<any>{
+    return lastValueFrom(this.http.post<any>('/api/postOrder', order))
   }
 
 

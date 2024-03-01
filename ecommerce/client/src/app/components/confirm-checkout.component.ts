@@ -5,6 +5,7 @@ import { LineItem } from '../models';
 import { Observable, Subscription } from 'rxjs';
 import { ProductService } from '../product.service';
 
+
 @Component({
   selector: 'app-confirm-checkout',
   templateUrl: './confirm-checkout.component.html',
@@ -29,10 +30,10 @@ export class ConfirmCheckoutComponent implements OnInit {
   // itemArray: LineItem[] = []
 
 
-  itemArray:any[] = []
+  itemArray: any[] = []
 
   ngOnInit(): void {
-    
+    console.info("oninit")
     this.getItemFromStore()
     this.form = this.createForm()
 
@@ -55,35 +56,39 @@ export class ConfirmCheckoutComponent implements OnInit {
   // }
 
   // from dexie store 
-  name!: string 
+  name!: string
   getItemFromStore() {
-   this.sub$= this.store.onEntries.asObservable().subscribe({
-      next:((result)=>{
-        // console.info("IN CHECKOUT COMPONENT",result)
-        this.itemArray = result
-        // for (let i of this.itemArray){
-        //   this.name = i.name
-          
+     this.store.getItem().then ((result)=>{
+      this.itemArray = result
+     })
 
-        // }
-        console.info("IN CHECKOUT COMPONENT", this.itemArray)
-      }), 
-      error: ((err)=>{console.info(err)}),
-      complete: ()=>{
-        this.sub$.unsubscribe
-      }
-    })
+    //  this.sub$= this.store.onEntries.asObservable().subscribe({
+    //     next:((result)=>{
+    //       // console.info("IN CHECKOUT COMPONENT",result)
+    //       this.itemArray = result
+    //       // for (let i of this.itemArray){
+    //       //   this.name = i.name
+
+
+    //       // }
+    //       console.info("IN CHECKOUT COMPONENT", this.itemArray)
+    //     }), 
+    //     error: ((err)=>{console.info(err)}),
+    //     complete: ()=>{
+    //       this.sub$.unsubscribe
+    //     }
+    //   })
   }
 
 
-  placeOrder(){
-    
+  placeOrder() {
+
     var name = this.form.value["name"]
     var address = this.form.value["address"]
     var comments = this.form.value["comments"]
     var priority = this.form.value['priority']
 
-    const order:  any = {
+    const order: any = {
 
       "name": name,
       "address": address,
@@ -91,35 +96,23 @@ export class ConfirmCheckoutComponent implements OnInit {
       "comments": comments,
       "cart": this.itemArray
     }
-    console.info("what is this?",order)
+    console.info("what is this?", order)
     this.productSvc.checkout(order)
-    .then((result)=>{
-      console.info("view fetched date", result)
-        const jsonString = JSON.stringify(result)
-        alert(jsonString)
-    })
+      .then((result) => {
+        console.info("HELUUUUU", result)
+        // const jsonString = JSON.stringify(result)
+        alert(`result: ${result.success}`)
+      })
       .catch((err) => {
         const jsonString = JSON.stringify(err)
-      
-      alert(jsonString)
-  })
+        console.info("ERRRORRRRR>>>>>>>>")
+        alert(jsonString)
+      })
 
     // this.form.reset()
   }
 
 
-  // this.newsSvc.saveForm(this.form, this.imageFile)
-  // .then((result) => {
-  //   console.info("view fetched date", result)
-  //   const jsonString = JSON.stringify(result)
-  //   alert(jsonString)
-  //   this.router.navigate(['/'])
 
-  //   this.displayImg = result.url
-  //   console.info('got this url', this.displayImg)
-  // })
-  // .catch((err) => {
-  //   console.info(err)
-  // })
- 
+
 }

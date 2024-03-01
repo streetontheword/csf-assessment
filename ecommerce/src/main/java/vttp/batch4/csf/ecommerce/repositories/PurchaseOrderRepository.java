@@ -23,7 +23,7 @@ public class PurchaseOrderRepository {
 		""";
 
     public static final String SQL_INSERT_PURCHASEORDER= """
-      insert into cart(orderId, name, address, priority, comments) values (?,?,?,?,?)
+      insert into purchaseOrder(orderId, name, address, priority, comments) values (?,?,?,?,?)
       """;
   
 
@@ -45,7 +45,8 @@ public class PurchaseOrderRepository {
     String orderId = order.getOrderId();
     order.getAddress();
     System.out.println("HELLLOOO"+orderId);
-
+    int coun = template.update(SQL_INSERT_PURCHASEORDER, orderId, order.getName(),order.getAddress(),order.getPriority(),order.getComments());
+    System.out.println("count:"+coun);
     List<LineItem> list = listOfCart.getLineItems();
     for (LineItem l :list){
       String prodId = l.getProductId();
@@ -54,9 +55,10 @@ public class PurchaseOrderRepository {
       float price = l.getPrice();
 
       
-      template.update(SQL_INSERT_PURCHASEORDER, orderId, order.getName(),order.getAddress(),order.getPriority(),order.getComments());
-      
-      template.update(SQL_INSERT_LINEITEMS, prodId, name, qty, price, orderId);
+    
+
+      int count= template.update(SQL_INSERT_LINEITEMS, prodId, name, qty, price, orderId);
+      System.out.println("count2:"+count);
     }
 
 

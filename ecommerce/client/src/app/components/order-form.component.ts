@@ -53,8 +53,9 @@ export class OrderFormComponent implements OnInit {
     // this.form = this.createForm()
     console.info(lineItem)
 
-    this.store.addItems(lineItem)   //adds to the store 
-    // this.store.getItem()
+    this.store.addItems(lineItem)
+    // this.store.getItemFromStore()   //adds to the store 
+    this.store.getItem()
 
   }
 

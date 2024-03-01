@@ -23,15 +23,17 @@ export class AppComponent implements OnInit {
 
   itemCount!: number
 
-  @Input()
+  // @Input()
   lineItems: LineItem[]=[]
 
 
   ngOnInit(): void {
   
    this.getItemFromStore()
+  //  this.store.getItem()
 
   }
+
 
   checkout(): void {
     //get item from dexie store | how to pass to the other component 
@@ -40,11 +42,20 @@ export class AppComponent implements OnInit {
     
     }
     this.router.navigate(['/checkout'])
- 
+    
   }
 
 
+
+  
   getItemFromStore() {
+    // this.store.getItem()
+    // .then((result) => {
+    //   console.info("view fetched date", result)
+    //   this.lineItems = result
+    //   console.info("item array", this.lineItems)
+    // }
+    // )
     this.sub$= this.store.onEntries.asObservable().subscribe({
        next:((result)=>{
          // console.info("IN CHECKOUT COMPONENT",result)
